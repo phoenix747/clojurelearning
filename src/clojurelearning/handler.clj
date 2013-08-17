@@ -3,30 +3,42 @@
   (:require [compojure.handler :as handler]
             [compojure.route :as route])
 
-  (:use [net.cgrand.enlive-html :only (deftemplate defsnippet snippet append)]))
+  (:require [net.cgrand.enlive-html :as eh]))
 
-(defsnippet index-content "index.html" [:.jumbotron]
+(eh/defsnippet home-content "index.html" [:.jumbotron]
   [])
 
-(defsnippet meterial-content "meterial.html" [:.meterial]
+(eh/defsnippet meterial-content "meterial.html" [:.meterial]
   [])
 
-(defsnippet about-content "about.html" [:.about]
+(eh/defsnippet about-content "about.html" [:.about]
   [])
 
-(defsnippet footer "footer.html" [:.footer]
+(eh/defsnippet home-masthead "masthead.html" [:.masthead]
+  []
+  [:#home] (eh/add-class "active"))
+
+(eh/defsnippet meterial-masthead "masthead.html" [:.masthead]
+  []
+  [:#meterial] (eh/add-class "active"))
+
+(eh/defsnippet about-masthead "masthead.html" [:.masthead]
+  []
+  [:#about] (eh/add-class "active"))
+
+(eh/defsnippet footer "footer.html" [:.footer]
   [])
 
-(deftemplate template "template.html"
+(eh/deftemplate template "template.html"
   [page]
   [:#main] (cond
-            (= page "index") (append (index-content) (footer))
-            (= page "meterial") (append (meterial-content) (footer))
-            (= page "about") (append (about-content) (footer))
+            (= page "home") (eh/append (home-masthead) (home-content) (footer))
+            (= page "meterial") (eh/append (meterial-masthead) (meterial-content) (footer))
+            (= page "about") (eh/append (about-masthead) (about-content) (footer))
             true nil))
 
 (defroutes app-routes
-  (GET "/" [] (template "index"))
+  (GET "/" [] (template "home"))
   (GET "/meterial.html" [] (template "meterial"))
   (GET "/about.html" [] (template "about"))
   (route/resources "/")
