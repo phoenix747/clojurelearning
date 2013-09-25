@@ -5,10 +5,13 @@
 
   (:require [net.cgrand.enlive-html :as eh]))
 
-(eh/defsnippet home-content "index.html" [:.jumbotron]
+(eh/defsnippet home-content "home.html" [:.jumbotron]
   [])
 
 (eh/defsnippet meterial-content "meterial.html" [:.meterial]
+  [])
+
+(eh/defsnippet projects-content "projects.html" [:.projects]
   [])
 
 (eh/defsnippet about-content "about.html" [:.about]
@@ -22,6 +25,10 @@
   []
   [:#meterial] (eh/add-class "active"))
 
+(eh/defsnippet projects-masthead "masthead.html" [:.masthead]
+  []
+  [:#projects] (eh/add-class "active"))
+
 (eh/defsnippet about-masthead "masthead.html" [:.masthead]
   []
   [:#about] (eh/add-class "active"))
@@ -34,12 +41,14 @@
   [:#main] (cond
             (= page "home") (eh/append (home-masthead) (home-content) (footer))
             (= page "meterial") (eh/append (meterial-masthead) (meterial-content) (footer))
+            (= page "projects") (eh/append (projects-masthead) (projects-content) (footer))
             (= page "about") (eh/append (about-masthead) (about-content) (footer))
             true nil))
 
 (defroutes app-routes
   (GET "/" [] (template "home"))
   (GET "/meterial.html" [] (template "meterial"))
+  (GET "/projects.html" [] (template "projects"))
   (GET "/about.html" [] (template "about"))
   (route/resources "/")
   (route/not-found "Not Found"))
